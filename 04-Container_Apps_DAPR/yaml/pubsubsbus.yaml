@@ -1,0 +1,8 @@
+componentType: pubsub.azure.servicebus
+version: v1
+metadata:
+- name: connectionString
+  secretRef: sbus-connectionstring
+secrets:
+- name: sbus-connectionstring
+  value: super-secret

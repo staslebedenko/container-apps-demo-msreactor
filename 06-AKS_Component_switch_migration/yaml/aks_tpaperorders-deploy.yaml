@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tpaperorders
+  namespace: tpaper
+  labels:
+    app: tpaperorders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: tpaperorders
+  template:
+    metadata:
+      labels:
+        app: tpaperorders
+        service: tpaperorders
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "tpaperorders"
+        dapr.io/app-port: "80"
+        dapr.io/log-level: debug
+    spec:
+      containers:
+        - name: tpaperorders
+          image: dccmodernregistry.azurecr.io/tpaperorders:v9
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: SqlPaperString
+              value: Server=tcp:dcc-modern-sql.database.windows.net,1433;Database=paperorders;User ID=FancyUser3;Encrypt=true;Connection Timeout=30;
+            - name: SqlPaperPassword
+              valueFrom:
+                secretKeyRef:
+                  name: sql-secret
+                  key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tpaperorders
+  namespace: tpaper
+  labels:
+    app: tpaperorders
+    service: tpaperorders
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    service: tpaperorders

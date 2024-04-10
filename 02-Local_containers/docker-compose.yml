@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  tpaperorders:
+    image: ${DOCKER_REGISTRY-}tpaperorders
+    build:
+      context: .
+      dockerfile: TPaperOrders/Dockerfile

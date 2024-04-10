@@ -1,0 +1,21 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: azurekeyvault
+  namespace: tpaper
+spec:
+  type: secretstores.azure.keyvault
+  version: v1
+  metadata:
+  - name: vaultName
+    value: "dcc-modern"
+  - name: azureTenantId
+    value: "53e93ede-ec5b-4d7a-8376-48e080d23e88"
+  - name: azureClientId
+    value: "474f817c-7eba-4656-ae09-979a4bc8d844"
+  - name: azureClientSecret
+    secretKeyRef:
+      name: azurekeyvault
+      key: clientsecret
+auth:
+  secretStore: kubernetes
